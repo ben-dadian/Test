@@ -206,10 +206,6 @@ $PCName = Read-Host -Prompt 'Input the Computer Name (Check Naming Scheme)'
 $Domain = Read-Host -Prompt 'Input the Domain name'
 $User = Read-Host -Prompt 'Input the user name'
 
-#Rename the PC
-
-Rename-Computer -NewName "$PCName" -PassThru
-
 # Join a Domain
 
 Add-Computer -DomainName "$Domain" -PassThru -Verbose
@@ -217,6 +213,10 @@ Add-Computer -DomainName "$Domain" -PassThru -Verbose
 # Grant local admin
 
 Add-LocalGroupMember -Group "Administrators" -Member "$User" -Confirm
+
+#Rename the PC
+
+Rename-Computer -NewName "$PCName" -PassThru
 
 # Step 7        #
 # Closes script #
