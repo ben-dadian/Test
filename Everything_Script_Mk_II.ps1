@@ -1,5 +1,3 @@
-#New Comment
-
 cd C:\
 
 # Step 1                                                              #
@@ -113,12 +111,12 @@ pause
 
 $a = new-object -ComObject wscript.shell
 
-$a.Popup("Move PC in LabTech to Correct Location")
+$a.Popup("Move PC in LabTech to Correct Location", 0, "Everything_Script_Mk_II", 0)
 
 $a = new-object -ComObject wscript.shell
 
 # Checks is updates installed #
-$intanswer = $a.popup("Did Updates Install?", 0, "Install Updates", 4)
+$intanswer = $a.popup("Did Updates Install?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 7) {
 dir C:\PS_Update\*.psm1 | Unblock-File
 dir C:\PS_Update\*ps1xml | Unblock-File
@@ -128,12 +126,12 @@ Get-WUInstall -acceptall
 #Set-ExecutionPolicy remoteSigned
 }
 
-$intanswer = $a.popup("Did Ninite Install?", 0, "Install Ninite", 4)
+$intanswer = $a.popup("Did Ninite Install?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 7) {
 & "$USBDrive\Deployment Toolkit\Ninite 7Zip Air Chrome Flash Java NET 462 Reader Installer.exe" /silent
 }
 
-$intanswer = $a.popup("Did LabTech Install?", 0, "Install LabTech", 4)
+$intanswer = $a.popup("Did LabTech Install?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 7) {
 & "$USBDrive\Deployment Toolkit\Agent_Install.exe"
 }
@@ -159,35 +157,35 @@ $a = new-object -ComObject wscript.shell
 
 # OFFICE 2016 PROPLUS #
 
-$intanswer = $a.popup("Install Office 2016 ProPlus?", 0, "Install Office", 4)
+$intanswer = $a.popup("Install Office 2016 ProPlus?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\O365ProPlus\setup.exe" /configure "$USBDrive\Deployment Toolkit\O365ProPlus\O365ProPlus.xml"
 } else {
 
 # OFFICE 2016 BUSINESS #
 
-$intanswer = $a.popup("Install Office 2016 Business?", 0, "Install Office", 4)
+$intanswer = $a.popup("Install Office 2016 Business?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\O365Business\setup.exe" /configure "$USBDrive\Deployment Toolkit\O365Business\O365Business.xml"
 } else { 
 
 # OFFICE 2013 STANDARD #
 
-$intanswer = $a.popup("Install Office 2013 Standard?", 0, "Install Office", 4)
+$intanswer = $a.popup("Install Office 2013 Standard?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\Office\office2013Standard\setup.exe"
 } else { 
 
 # OFFICE 2013 PRO PLUS #
 
-$intanswer = $a.popup("Install Office 2013 ProPlus?", 0, "Install Office", 4)
+$intanswer = $a.popup("Install Office 2013 ProPlus?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\Office\office2013proplus\setup.exe"
 } else { 
 
 # OFFICE 2016 STANDARD #
 
-$intanswer = $a.popup("Install Office 2016 Standard?", 0, "Install Office", 4)
+$intanswer = $a.popup("Install Office 2016 Standard?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\Office\office2016standard\setup.exe"
 } else { 
@@ -197,7 +195,7 @@ $a.Popup("No Office Installed")
 }}}}}
 
 $a = new-object -ComObject wscript.shell
-$intanswer = $a.popup("Install DisplayLink?", 0, "Install DisplayLink", 4)
+$intanswer = $a.popup("Install DisplayLink?", 0, "Everything_Script_Mk_II", 4)
 if ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\DisplayLink_Software.exe" -stageDrivers -silent
 }
@@ -228,17 +226,17 @@ Exit
 
 $a = new-object -ComObject wscript.shell
 
-$a.Popup("Make Sure Internet Is Connected")
+$a.Popup("Make Sure Internet Is Connected", 0, "Everything_Script_Mk_II", 0)
 
 # TEST INTERNET CONNECTION #
 $internet = Test-Connection google.com -Quiet
 if ($internet -eq "True" ) {
     $a = new-object -ComObject wscript.shell
-    $a.Popup("Internet Is Connected")
+    $a.Popup("Internet Is Connected", 0, "Everything_Script_Mk_II", 0)
 } else {
     do {
         $a = new-object -ComObject wscript.shell
-        $a.Popup("Internet is not connected. Check connection and hit OK")
+        $a.Popup("Internet is not connected. Check connection and hit OK", 0, "Everything_Script_Mk_II", 0)
         $internet = Test-Connection google.com -Quiet
         } while ($internet -ne "True" )
 }
@@ -310,7 +308,7 @@ pause
 # Installs Ninite Programs (7Zip, Air, Chrome, Flash, Java, NET 4.62, Adobe Reader DC) silently #
 
 $a = new-object -ComObject wscript.shell
-$intanswer = $a.popup("Install Ninite?", 0, "Install Ninite", 4)
+$intanswer = $a.popup("Install Ninite?", 0, "Everything_Script_Mk_II", 4)
 if ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\Ninite 7Zip Air Chrome Flash Java NET 462 Reader Installer.exe" /silent
 }
@@ -319,7 +317,7 @@ if ($intAnswer -eq 6) {
 # Removes preinstalled versions of Office #
 
 $a = new-object -ComObject wscript.shell
-$intanswer = $a.popup("Remove all versions of Office?", 0, "Remove Office", 4)
+$intanswer = $a.popup("Remove all versions of Office?", 0, "Everything_Script_Mk_II", 4)
 if ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\Junk Removal\OffScrub_O15msi.vbs"
 & "$USBDrive\Deployment Toolkit\Junk Removal\OffScrub_O16msi.vbs"
@@ -329,7 +327,7 @@ if ($intAnswer -eq 6) {
 # Step 12                                                            #
 # Moves PowerShell module to install Windows Updates to C:\PS_Update #
 $a = new-object -ComObject wscript.shell
-$intanswer = $a.popup("Install Updates?", 0, "Install Updates", 4)
+$intanswer = $a.popup("Install Updates?", 0, "Everything_Script_Mk_II", 4)
 if ($intAnswer -eq 6) {
 Copy-Item -path "$USBDrive\Deployment Toolkit\PSWindowsUpdate" -Destination "C:\PS_Update" -Recurse
 
