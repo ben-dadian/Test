@@ -1,4 +1,4 @@
-cd C:\
+Set-Location C:\
 
 # Step 1                                                              #
 # Checks to see if scrip has already run once and skips if it has not #
@@ -13,7 +13,7 @@ pause
 
 # Step 3                                            #
 # Sets USB Drive with files as veriable "$USBDrive" #
-$USBDrive = Get-WMIObject Win32_Volume | ? { $_.Label -eq 'Storage' } | select -expand driveletter
+$USBDrive = Get-WMIObject Win32_Volume | Where-Object { $_.Label -eq 'Storage' } | Select-Object -expand driveletter
 
 # Step 4                       #
 # Removed junk Windows 10 apps #
@@ -118,10 +118,10 @@ $a = new-object -ComObject wscript.shell
 # Checks is updates installed #
 $intanswer = $a.popup("Did Updates Install?", 0, "Everything_Script_Mk_II", 4)
 If ($intAnswer -eq 7) {
-dir C:\PS_Update\*.psm1 | Unblock-File
-dir C:\PS_Update\*ps1xml | Unblock-File
+Get-ChildItem C:\PS_Update\*.psm1 | Unblock-File
+Get-ChildItem C:\PS_Update\*ps1xml | Unblock-File
 set-executionpolicy unrestricted -Force
-ipmo "C:\PS_Update\PSWindowsUpdate"
+Import-Module "C:\PS_Update\PSWindowsUpdate"
 Get-WUInstall -acceptall
 #Set-ExecutionPolicy remoteSigned
 }
@@ -202,7 +202,6 @@ if ($intAnswer -eq 6) {
 
 pause
 
-$PCName = Read-Host -Prompt 'Input the Computer Name (Check Naming Scheme)'
 $Domain = Read-Host -Prompt 'Input the Domain name'
 $User = Read-Host -Prompt 'Input the user name'
 
@@ -213,10 +212,6 @@ Add-Computer -DomainName "$Domain" -PassThru -Verbose
 # Grant local admin
 
 Add-LocalGroupMember -Group "Administrators" -Member "$User" -Confirm
-
-#Rename the PC
-
-Rename-Computer -NewName "$PCName" -PassThru
 
 # Step 7        #
 # Closes script #
@@ -261,14 +256,14 @@ $file = "C:\NICpowerChange.log"
 "Searching for Dell / Intel" | Add-Content -Path $file
 
 #find relevant network adapters
-$nics = Get-WmiObject Win32_NetworkAdapter | where {$_.Name.Contains('Dell') -or $_.Name.Contains('Intel')}
+$nics = Get-WmiObject Win32_NetworkAdapter | Where-Object {$_.Name.Contains('Dell') -or $_.Name.Contains('Intel')}
 
 $nicsFound = $nics.Count
 "number of network adapters found: ", $nicsFound | Add-Content -Path $file
 
 foreach ($nic in $nics)
 {
-   $powerMgmt = Get-WmiObject MSPower_DeviceEnable -Namespace root\wmi | where {$_.InstanceName -match [regex]::Escape($nic.PNPDeviceID)}
+   $powerMgmt = Get-WmiObject MSPower_DeviceEnable -Namespace root\wmi | Where-Object {$_.InstanceName -match [regex]::Escape($nic.PNPDeviceID)}
  
    # check to see if power management can be turned off
    if(Get-Member -inputobject $powerMgmt -name "Enable" -Membertype Properties){
@@ -294,13 +289,13 @@ foreach ($nic in $nics)
 
 # Step 9                                            #
 # Sets USB Drive with files as veriable "$USBDrive" #
-$USBDrive = Get-WMIObject Win32_Volume | ? { $_.Label -eq 'Storage' } | select -expand driveletter
+$USBDrive = Get-WMIObject Win32_Volume | Where-Object { $_.Label -eq 'Storage' } | Select-Object -expand driveletter
 
-echo Now configuring your Power Plan.
+Write-Output Now configuring your Power Plan.
 $GUIDNew = 'b23303fa-44e5-48f8-a2cf-358c11d6d4f1'
 powercfg /import "$USBDrive\Deployment Toolkit\PowerPlan\Mainstay.pow" $GUIDNew
 powercfg -setactive $GUIDNew
-echo Your Power Plan has been configured.
+Write-Output Your Power Plan has been configured.
 
 pause
 
@@ -334,10 +329,10 @@ Copy-Item -path "$USBDrive\Deployment Toolkit\PSWindowsUpdate" -Destination "C:\
 
 # Step 13                                                                     #
 # Unblocks Update module, adds module to powershell, and runs Windows Updates #
-dir C:\PS_Update\*.psm1 | Unblock-File
-dir C:\PS_Update\*ps1xml | Unblock-File
+Get-ChildItem C:\PS_Update\*.psm1 | Unblock-File
+Get-ChildItem C:\PS_Update\*ps1xml | Unblock-File
 set-executionpolicy unrestricted -Force
-ipmo "C:\PS_Update\PSWindowsUpdate"
+Import-Module "C:\PS_Update\PSWindowsUpdate"
 Get-WUInstall -acceptall -IgnoreReboot
 }
 
@@ -355,7 +350,7 @@ Wait-Process Ninite
 new-Item c:\PS_RunOnce -ItemType Directory
 Copy-Item -Path "$USBDrive\Everything_Script_Mk_II.ps1" -Destination "C:\PS_RunOnce"
 Copy-Item -Path "$USBDrive\RunOnce.ps1" -Destination "C:\PS_RunOnce"
-dir C:\PS_RunOnce\*.ps1 | Unblock-File
+Get-ChildItem C:\PS_RunOnce\*.ps1 | Unblock-File
 
 # Step 15                                                       #
 # Creates RunOnce registry key to run script after rebooting PC #
@@ -373,7 +368,11 @@ Set-ItemProperty -Path .\RunOnce -Name removePrograms -Value 'C:\Windows\System3
 # Install default LabTech agent #
 & "$USBDrive\Deployment Toolkit\Agent_Install.exe"
 
-pause
+$PCName = Read-Host -Prompt 'Input the Computer Name (Check Naming Scheme)'
+
+#Rename the PC
+
+Rename-Computer -NewName "$PCName" -PassThru
 
 # Step 17
 # Reboots PC #
