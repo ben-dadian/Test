@@ -107,8 +107,6 @@ $apps = @(
         Remove-AppxProvisionedPackage -Online
     }
 
-pause
-
 $a = new-object -ComObject wscript.shell
 
 $a.Popup("Move PC in LabTech to Correct Location", 0, "Everything_Script_Mk_II", 0)
@@ -136,14 +134,10 @@ If ($intAnswer -eq 7) {
 & "$USBDrive\Deployment Toolkit\Agent_Install.exe"
 }
 
-pause
-
 # Step 5
 # Removes folders created in steps 12 and 14 #
 Remove-Item -Path "C:\PS_Update" -Recurse
 Remove-Item -Path "C:\PS_RunOnce" -Recurse
-
-pause
 
 # Step 6                                                         #
 # Asks if you would like to install different versions of Office #
@@ -200,10 +194,11 @@ if ($intAnswer -eq 6) {
 & "$USBDrive\Deployment Toolkit\DisplayLink_Software.exe" -stageDrivers -silent
 }
 
-pause
-
 $Domain = Read-Host -Prompt 'Input the Domain name'
 $User = Read-Host -Prompt 'Input the user name'
+$PCName = Read-Host -Prompt 'Input the Computer Name (Check Naming Scheme)'
+
+$JoinedName = Get-WmiObject Win32_ComputerSystem | Select-Object -expand "Domain"
 
 # Join a Domain
 
@@ -212,6 +207,10 @@ Add-Computer -DomainName "$Domain" -PassThru -Verbose
 # Grant local admin
 
 Add-LocalGroupMember -Group "Administrators" -Member "$User" -Confirm
+
+#Rename the PC
+
+Rename-Computer -NewName "$PCName" -PassThru -DomainCredential "$JoinedName\mstech"
 
 # Step 7        #
 # Closes script #
@@ -297,8 +296,6 @@ powercfg /import "$USBDrive\Deployment Toolkit\PowerPlan\Mainstay.pow" $GUIDNew
 powercfg -setactive $GUIDNew
 Write-Output Your Power Plan has been configured.
 
-pause
-
 # Step 10                                                                                       #
 # Installs Ninite Programs (7Zip, Air, Chrome, Flash, Java, NET 4.62, Adobe Reader DC) silently #
 
@@ -368,11 +365,7 @@ Set-ItemProperty -Path .\RunOnce -Name removePrograms -Value 'C:\Windows\System3
 # Install default LabTech agent #
 & "$USBDrive\Deployment Toolkit\Agent_Install.exe"
 
-$PCName = Read-Host -Prompt 'Input the Computer Name (Check Naming Scheme)'
-
-#Rename the PC
-
-Rename-Computer -NewName "$PCName" -PassThru
+Pause
 
 # Step 17
 # Reboots PC #
