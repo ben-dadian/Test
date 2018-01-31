@@ -1,6 +1,18 @@
 # Version Number = 1.0
 $Version = "1.0"
 
+# CHECK CURRENT VERSION AGAINST NEWEST #
+
+$HTML = Invoke-WebRequest https://raw.githubusercontent.com/ben-dadian/Test/master/Everything_Script_Mk_II.ps1
+$Text = $HTML.Content
+$Text | out-file C:\output.txt
+$CurrentV = cat C:\output.txt | select-object -first 1
+$CurrentV = $CurrentV -replace "# Version Number = ",''
+If ($NewV -gt $Version) {
+	$a = new-object -ComObject wscript.shell
+	$intanswer = $a.popup("You are currently using an older version of "Everything_Script_Mk_II.ps1" Please update as soon as posible.", 0, "Everything_Script_Mk_II", 0)
+}
+
 Set-Location C:\
 
 # Step 1                                                              #
